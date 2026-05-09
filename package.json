@@ -1,0 +1,8 @@
+{
+  "name": "global-mantos",
+  "version": "1.0.0",
+  "description": "Loja de camisas de futebol com Stripe",
+  "dependencies": {
+    "stripe": "^14.0.0"
+  }
+}

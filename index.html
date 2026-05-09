@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Mantos — Camisas de Futebol</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #00C65E;
+  --destaque: #00FF7F;
+  --preto: #0A0A0A;
+  --cinza-escuro: #141414;
+  --cinza-medio: #1E1E1E;
+  --cinza-borda: #2A2A2A;
+  --branco: #F5F5F0;
+  --amarelo: #FFD700;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--preto); color:var(--branco); font-family:'Barlow',sans-serif; min-height:100vh; overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px),
+    repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px);
+}
+
+/* ── HEADER ── */
+header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(10,10,10,0.96); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--cinza-borda);
+  padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px;
+}
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.logo-text { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; color:var(--branco); }
+.logo-text span { color:var(--verde); }
+nav { display:flex; align-items:center; gap:1.25rem; }
+nav a {
+  font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; letter-spacing:1.5px;
+  text-transform:uppercase; color:rgba(245,245,240,0.5); text-decoration:none; transition:color .2s;
+}
+nav a:hover { color:var(--verde); }
+.btn-nav-admin {
+  background:var(--verde); color:var(--preto) !important;
+  padding:7px 16px; border-radius:4px; font-weight:700 !important;
+  cursor:pointer; border:none; font-family:'Barlow Condensed',sans-serif;
+  font-size:0.82rem; letter-spacing:1.5px; text-transform:uppercase;
+}
+.btn-nav-admin:hover { background:var(--destaque); }
+
+/* ── HERO ── */
+.hero { position:relative; z-index:1; padding:5rem 2rem 3rem; text-align:center; overflow:hidden; }
+.hero-badge {
+  display:inline-block; font-family:'Barlow Condensed',sans-serif;
+  font-size:0.72rem; letter-spacing:3px; text-transform:uppercase;
+  color:var(--verde); border:1px solid var(--verde); padding:4px 14px; border-radius:2px; margin-bottom:1.5rem;
+}
+.hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3.5rem,10vw,7rem); line-height:.92; margin-bottom:1.5rem; }
+.hero h1 em { font-style:normal; -webkit-text-stroke:1px var(--branco); color:transparent; }
+.hero-sub { color:rgba(245,245,240,0.48); font-size:.98rem; max-width:460px; margin:0 auto 0; line-height:1.6; }
+
+.ball-deco {
+  position:absolute; opacity:.035; pointer-events:none;
+  animation:spin-slow 40s linear infinite; transform-origin:center;
+}
+.ball-deco.r { right:-70px; top:50%; margin-top:-180px; width:360px; }
+.ball-deco.l { left:-90px; top:5%; width:260px; }
+@keyframes spin-slow { to { transform:rotate(360deg); } }
+
+/* ── FILTERS ── */
+.filters-bar {
+  position:relative; z-index:1; padding:2rem 2rem 1.75rem;
+  display:flex; align-items:center; gap:.6rem; flex-wrap:wrap;
+  max-width:1400px; margin:0 auto;
+}
+.filter-label { font-family:'Barlow Condensed',sans-serif; font-size:.7rem; letter-spacing:2px; text-transform:uppercase; color:rgba(245,245,240,.3); margin-right:.25rem; }
+.filter-btn {
+  background:transparent; border:1px solid var(--cinza-borda); color:rgba(245,245,240,.5);
+  padding:5px 13px; border-radius:3px; font-family:'Barlow Condensed',sans-serif;
+  font-size:.76rem; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .2s;
+}
+.filter-btn:hover,.filter-btn.active { background:var(--verde); border-color:var(--verde); color:var(--preto); }
+.search-box {
+  margin-left:auto; display:flex; align-items:center; gap:8px;
+  background:var(--cinza-medio); border:1px solid var(--cinza-borda); border-radius:4px; padding:6px 12px;
+}
+.search-box input {
+  background:none; border:none; color:var(--branco); font-family:'Barlow',sans-serif; font-size:.85rem; outline:none; width:150px;
+}
+.search-box input::placeholder { color:rgba(245,245,240,.25); }
+
+/* ── GRID ── */
+.grid-section { position:relative; z-index:1; max-width:1400px; margin:0 auto; padding:0 2rem 5rem; }
+.section-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:1.5rem; }
+.section-title { font-family:'Bebas Neue',sans-serif; font-size:1.55rem; letter-spacing:2px; }
+.section-count { font-size:.76rem; color:rgba(245,245,240,.28); font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+
+.jerseys-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:2px; }
+
+/* ── CARD ── */
+.jersey-card { position:relative; background:var(--cinza-escuro); cursor:pointer; overflow:hidden; aspect-ratio:3/4; transition:transform .3s; }
+.jersey-card:hover { z-index:2; transform:scale(1.025); }
+.jersey-card img, .jersey-card video { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s; }
+.jersey-card:hover img, .jersey-card:hover video { transform:scale(1.07); }
+
+.placeholder-art {
+  width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#1a1a1a 0%,#0d1a10 100%);
+  color:rgba(255,255,255,.08); font-family:'Bebas Neue',sans-serif; font-size:5rem; letter-spacing:4px; gap:.4rem;
+}
+.placeholder-art small { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; letter-spacing:3px; text-transform:uppercase; }
+
+.card-gradient { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.2) 55%,transparent 100%); pointer-events:none; }
+.card-bottom { position:absolute; bottom:0; left:0; right:0; padding:1rem 1.1rem; }
+.card-team { font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:2px; display:block; }
+.card-meta { font-family:'Barlow Condensed',sans-serif; font-size:.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--verde); display:block; margin-top:2px; }
+.card-price { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:var(--amarelo); display:block; margin-top:5px; }
+
+.badge-type {
+  position:absolute; top:11px; left:11px;
+  background:rgba(0,0,0,.65); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(4px);
+  padding:3px 9px; border-radius:2px; font-family:'Barlow Condensed',sans-serif;
+  font-size:.6rem; letter-spacing:2px; text-transform:uppercase; color:rgba(245,245,240,.6);
+}
+.badge-video {
+  position:absolute; top:11px; right:11px;
+  background:var(--verde); color:var(--preto); width:26px; height:26px;
+  border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.93); z-index:1000;
+  backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:1.5rem;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--cinza-escuro); border:1px solid var(--cinza-borda); border-radius:6px;
+  max-width:860px; width:100%; max-height:90vh; overflow-y:auto;
+  display:grid; grid-template-columns:1fr 1fr; position:relative;
+}
+.modal-media { background:#0f0f0f; min-height:420px; position:relative; overflow:hidden; }
+.modal-media img, .modal-media video { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+.modal-placeholder {
+  width:100%; min-height:420px; height:100%; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#1a1a1a 0%,#0d1a10 100%);
+  color:rgba(255,255,255,.06); font-family:'Bebas Neue',sans-serif; font-size:7rem;
+}
+.modal-info { padding:2rem; display:flex; flex-direction:column; gap:.85rem; }
+.modal-tag { font-family:'Barlow Condensed',sans-serif; font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--verde); }
+.modal-team { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; letter-spacing:1px; line-height:1; }
+.modal-season { font-size:.82rem; color:rgba(245,245,240,.4); font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; }
+.modal-desc { font-size:.87rem; color:rgba(245,245,240,.52); line-height:1.7; flex:1; }
+.modal-price { font-family:'Bebas Neue',sans-serif; font-size:2rem; color:var(--amarelo); letter-spacing:1px; }
+.modal-meta { display:flex; gap:.6rem; flex-wrap:wrap; }
+.meta-chip {
+  background:var(--cinza-medio); border:1px solid var(--cinza-borda); border-radius:3px;
+  padding:4px 10px; font-family:'Barlow Condensed',sans-serif; font-size:.72rem;
+  letter-spacing:1px; color:rgba(245,245,240,.55);
+}
+.meta-chip strong { color:var(--branco); }
+
+.btn-buy {
+  background:var(--verde); color:var(--preto); border:none; border-radius:4px;
+  padding:14px 20px; font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:2px;
+  cursor:pointer; width:100%; transition:background .2s, transform .1s; display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.btn-buy:hover { background:var(--destaque); }
+.btn-buy:active { transform:scale(.98); }
+.btn-buy:disabled { background:var(--cinza-borda); color:rgba(245,245,240,.3); cursor:not-allowed; }
+.btn-buy .spinner {
+  width:16px; height:16px; border:2px solid rgba(0,0,0,.3); border-top-color:var(--preto);
+  border-radius:50%; animation:spin .7s linear infinite; display:none;
+}
+.btn-buy.loading .spinner { display:block; }
+.btn-buy.loading .btn-label { opacity:.6; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.no-price-note { font-family:'Barlow Condensed',sans-serif; font-size:.75rem; letter-spacing:1px; color:rgba(245,245,240,.3); text-align:center; }
+
+.btn-close {
+  position:absolute; top:12px; right:12px; background:rgba(0,0,0,.6);
+  border:1px solid var(--cinza-borda); color:var(--branco);
+  width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:.9rem;
+  display:flex; align-items:center; justify-content:center; z-index:10; transition:background .2s;
+}
+.btn-close:hover { background:rgba(180,0,0,.4); }
+
+/* ── ADMIN PANEL ── */
+.admin-panel {
+  display:none; position:fixed; top:0; right:0; height:100vh; width:440px;
+  background:var(--cinza-escuro); border-left:1px solid var(--cinza-borda);
+  z-index:500; overflow-y:auto; padding:2rem; flex-direction:column; gap:1.1rem;
+}
+.admin-panel.open { display:flex; }
+.admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem; }
+.admin-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; color:var(--verde); }
+
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group label { font-family:'Barlow Condensed',sans-serif; font-size:.7rem; letter-spacing:2px; text-transform:uppercase; color:rgba(245,245,240,.45); }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background:var(--cinza-medio); border:1px solid var(--cinza-borda); border-radius:4px;
+  color:var(--branco); font-family:'Barlow',sans-serif; font-size:.88rem;
+  padding:9px 12px; outline:none; transition:border-color .2s; width:100%;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--verde); }
+.form-group textarea { resize:vertical; min-height:72px; }
+.form-group select option { background:var(--cinza-escuro); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.drop-zone {
+  border:2px dashed var(--cinza-borda); border-radius:6px; padding:1.75rem;
+  text-align:center; cursor:pointer; transition:all .2s; position:relative;
+}
+.drop-zone:hover, .drop-zone.over { border-color:var(--verde); background:rgba(0,198,94,.05); }
+.drop-zone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.drop-zone-ico { font-size:1.8rem; color:rgba(245,245,240,.18); margin-bottom:.5rem; }
+.drop-zone p { font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:1px; color:rgba(245,245,240,.35); }
+.drop-zone p strong { color:var(--verde); }
+
+.preview-thumbs { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.preview-thumb { width:58px; height:58px; object-fit:cover; border-radius:4px; border:1px solid var(--cinza-borda); }
+.preview-vid { width:58px; height:58px; background:var(--cinza-medio); border-radius:4px; border:1px solid var(--verde); display:flex; align-items:center; justify-content:center; color:var(--verde); font-size:1.2rem; }
+
+.btn-primary {
+  background:var(--verde); color:var(--preto); border:none; border-radius:4px;
+  padding:13px 20px; font-family:'Bebas Neue',sans-serif; font-size:1.1rem;
+  letter-spacing:2px; cursor:pointer; width:100%; transition:background .2s,transform .1s;
+}
+.btn-primary:hover { background:var(--destaque); }
+.btn-primary:active { transform:scale(.98); }
+
+.btn-ghost {
+  background:transparent; border:1px solid var(--cinza-borda); color:rgba(245,245,240,.55);
+  border-radius:4px; padding:8px 12px; cursor:pointer; font-size:.95rem; transition:all .2s;
+}
+.btn-ghost:hover { border-color:var(--branco); color:var(--branco); }
+
+.divider { border:none; border-top:1px solid var(--cinza-borda); margin:.1rem 0; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:2rem; left:50%; transform:translateX(-50%) translateY(120px);
+  padding:12px 24px; border-radius:4px; font-family:'Bebas Neue',sans-serif;
+  font-size:1rem; letter-spacing:2px; z-index:2000; transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  background:var(--verde); color:var(--preto);
+}
+.toast.error { background:#c0392b; color:#fff; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ── EMPTY ── */
+.empty-state { grid-column:1/-1; padding:5rem 2rem; text-align:center; }
+.empty-ico { font-size:3.5rem; opacity:.15; margin-bottom:1rem; }
+.empty-state h3 { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; color:rgba(245,245,240,.3); margin-bottom:.5rem; }
+.empty-state p { color:rgba(245,245,240,.2); font-size:.88rem; }
+
+/* ── FOOTER ── */
+footer { position:relative; z-index:1; border-top:1px solid var(--cinza-borda); padding:1.75rem 2rem; text-align:center; color:rgba(245,245,240,.2); font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:1.5px; text-transform:uppercase; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px) {
+  .modal-box { grid-template-columns:1fr; }
+  .modal-media { min-height:220px; }
+  .admin-panel { width:100%; }
+  nav a:not(.btn-nav-admin) { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="#" class="logo">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="15" stroke="#00C65E" stroke-width="1.5"/>
+      <path d="M16 4 L20 11 L16 9 L12 11 Z" fill="#00C65E"/>
+      <path d="M16 9 L22 14 L20 21 L12 21 L10 14 Z" fill="#00C65E" opacity=".25"/>
+      <circle cx="16" cy="16" r="3.5" fill="#00C65E" opacity=".9"/>
+    </svg>
+    <span class="logo-text">Global <span>Mantos</span></span>
+  </a>
+  <nav>
+    <a href="#" onclick="setFilter('todos',this)">Todas</a>
+    <a href="#" onclick="setFilter('titular',this)">Titulares</a>
+    <a href="#" onclick="setFilter('reserva',this)">Reservas</a>
+    <a href="#" onclick="setFilter('goleiro',this)">Goleiros</a>
+    <button class="btn-nav-admin" onclick="toggleAdmin()">+ Adicionar</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <svg class="ball-deco r" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="148" stroke="white" stroke-width="1.5"/>
+    <path d="M150 85 L178 120 L162 158 L138 158 L122 120 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M88 175 L118 162 L135 188 L108 214 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M212 175 L182 162 L165 188 L192 214 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M150 22 L178 60 L150 85 L122 60 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M150 278 L178 240 L150 215 L122 240 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M22 150 L60 122 L85 150 L60 178 Z" stroke="white" stroke-width="1.5" fill="none"/>
+    <path d="M278 150 L240 122 L215 150 L240 178 Z" stroke="white" stroke-width="1.5" fill="none"/>
+  </svg>
+  <svg class="ball-deco l" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="148" stroke="white" stroke-width="1.5"/>
+    <path d="M150 85 L178 120 L162 158 L138 158 L122 120 Z" stroke="white" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <div class="hero-badge">⚽ Coleção de Camisas</div>
+  <h1>O UNIFORME<br>É A <em>HISTÓRIA</em></h1>
+  <p class="hero-sub">Cada camisa conta uma história. Explore, colecione e adquira os kits que marcaram gerações.</p>
+</section>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <span class="filter-label">Filtrar:</span>
+  <button class="filter-btn active" onclick="setFilter('todos',this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('titular',this)">Titular</button>
+  <button class="filter-btn" onclick="setFilter('reserva',this)">Reserva</button>
+  <button class="filter-btn" onclick="setFilter('goleiro',this)">Goleiro</button>
+  <button class="filter-btn" onclick="setFilter('terceiro',this)">Terceiro</button>
+  <button class="filter-btn" onclick="setFilter('especial',this)">Especial</button>
+  <div class="search-box">
+    <span>🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar clube, temporada..." oninput="renderCards()">
+  </div>
+</div>
+
+<!-- GRID -->
+<section class="grid-section">
+  <div class="section-header">
+    <span class="section-title">COLEÇÃO</span>
+    <span class="section-count" id="countLabel">0 peças</span>
+  </div>
+  <div class="jerseys-grid" id="jerseyGrid"></div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalBg(event)">
+  <div class="modal-box">
+    <button class="btn-close" onclick="closeModal()">✕</button>
+    <div class="modal-media" id="modalMedia"></div>
+    <div class="modal-info">
+      <span class="modal-tag" id="modalTag"></span>
+      <h2 class="modal-team" id="modalTeam"></h2>
+      <p class="modal-season" id="modalSeason"></p>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div id="modalPriceWrap"></div>
+      <button class="btn-buy" id="btnBuy" onclick="checkout()">
+        <div class="spinner"></div>
+        <span class="btn-label">⚽ COMPRAR AGORA</span>
+      </button>
+      <p class="no-price-note" id="noPriceNote" style="display:none">Preço não cadastrado — edite a camisa para vender.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <span class="admin-title">Adicionar Camisa</span>
+    <button class="btn-ghost" onclick="toggleAdmin()">✕</button>
+  </div>
+  <hr class="divider">
+
+  <div class="form-group">
+    <label>Clube / Seleção *</label>
+    <input type="text" id="fTeam" placeholder="Ex: Flamengo, Brasil, Barcelona...">
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Temporada *</label>
+      <input type="text" id="fSeason" placeholder="Ex: 2023/24">
+    </div>
+    <div class="form-group">
+      <label>Tipo *</label>
+      <select id="fType">
+        <option value="titular">Titular</option>
+        <option value="reserva">Reserva</option>
+        <option value="goleiro">Goleiro</option>
+        <option value="terceiro">Terceiro</option>
+        <option value="especial">Especial</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Fabricante</label>
+      <input type="text" id="fBrand" placeholder="Nike, Adidas...">
+    </div>
+    <div class="form-group">
+      <label>Tamanho</label>
+      <input type="text" id="fSize" placeholder="P, M, G, GG...">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Preço (R$)</label>
+      <input type="number" id="fPrice" placeholder="Ex: 299.90" step="0.01" min="0">
+    </div>
+    <div class="form-group">
+      <label>Condição</label>
+      <select id="fCondition">
+        <option value="">—</option>
+        <option value="Nova">Nova com tag</option>
+        <option value="Excelente">Excelente</option>
+        <option value="Boa">Boa</option>
+        <option value="Usada">Usada</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Descrição</label>
+    <textarea id="fDesc" placeholder="Curiosidades, história da peça, detalhes..."></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Fotos & Vídeo</label>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fMedia" accept="image/*,video/*" multiple onchange="previewFiles(this)">
+      <div class="drop-zone-ico">📸</div>
+      <p><strong>Clique ou arraste</strong> arquivos aqui</p>
+      <p>JPG, PNG, WEBP, MP4 — vários de uma vez</p>
+    </div>
+    <div class="preview-thumbs" id="previewThumbs"></div>
+  </div>
+
+  <button class="btn-primary" onclick="addJersey()">⚽ SALVAR CAMISA</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<footer>Global Mantos &mdash; Sua coleção de camisas de futebol ⚽</footer>
+
+<script>
+// ── STATE ──
+let jerseys = JSON.parse(localStorage.getItem('ks_jerseys') || '[]');
+let currentFilter = 'todos';
+let selectedFiles = [];
+let activeJersey = null;
+
+function save() { localStorage.setItem('ks_jerseys', JSON.stringify(jerseys)); }
+
+// ── DEMO DATA ──
+if (!jerseys.length) {
+  jerseys = [
+    { id:1, team:'Flamengo', season:'2023', type:'titular', brand:'Adidas', size:'G', condition:'Nova', price:'299.90', desc:'Camisa titular do Flamengo na temporada 2023, com o tradicional manto rubro-negro.', cover:null, hasVideo:false },
+    { id:2, team:'Seleção Brasileira', season:'2022', type:'titular', brand:'Nike', size:'GG', condition:'Excelente', price:'450.00', desc:'Usada na Copa do Mundo 2022. Cor canarinho clássica com detalhe verde.', cover:null, hasVideo:false },
+    { id:3, team:'Corinthians', season:'2022', type:'reserva', brand:'Nike', size:'M', condition:'Boa', price:'189.00', desc:'Segundo uniforme do Timão, preto com detalhes brancos.', cover:null, hasVideo:false }
+  ];
+  save();
+}
+
+// ── RENDER ──
+function renderCards() {
+  const grid = document.getElementById('jerseyGrid');
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = jerseys.filter(j => {
+    const mf = currentFilter === 'todos' || j.type === currentFilter;
+    const ms = !q || j.team.toLowerCase().includes(q) || j.season.toLowerCase().includes(q) || (j.brand||'').toLowerCase().includes(q);
+    return mf && ms;
+  });
+
+  document.getElementById('countLabel').textContent = `${filtered.length} peça${filtered.length !== 1 ? 's' : ''}`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-ico">🥋</div><h3>Nenhuma camisa encontrada</h3><p>Adicione sua primeira camisa clicando em "+ Adicionar"</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(j => {
+    const initials = j.team.split(' ').map(w=>w[0]).join('').substring(0,3);
+    let media = `<div class="placeholder-art">${initials}<small>${j.season}</small></div>`;
+    if (j.cover) {
+      if (j.cover.startsWith('data:video')) media = `<video src="${j.cover}" muted autoplay loop playsinline></video>`;
+      else media = `<img src="${j.cover}" alt="${j.team}" loading="lazy">`;
+    }
+    const priceStr = j.price ? `<span class="card-price">R$ ${parseFloat(j.price).toFixed(2).replace('.',',')}</span>` : '';
+    return `<div class="jersey-card" onclick="openModal(${j.id})">
+      ${media}
+      <div class="card-gradient"></div>
+      <span class="badge-type">${j.type.toUpperCase()}</span>
+      ${j.hasVideo ? '<span class="badge-video">▶</span>' : ''}
+      <div class="card-bottom">
+        <span class="card-team">${j.team}</span>
+        <span class="card-meta">${j.season}${j.brand?' · '+j.brand:''}</span>
+        ${priceStr}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── FILTER ──
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (el && el.classList) el.classList.add('active');
+  renderCards();
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const j = jerseys.find(x => x.id === id);
+  if (!j) return;
+  activeJersey = j;
+
+  const initials = j.team.split(' ').map(w=>w[0]).join('').substring(0,3);
+  let media = `<div class="modal-placeholder">${initials}</div>`;
+  if (j.cover) {
+    if (j.cover.startsWith('data:video')) media = `<video src="${j.cover}" controls autoplay muted loop style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></video>`;
+    else media = `<img src="${j.cover}" alt="${j.team}">`;
+  }
+  document.getElementById('modalMedia').innerHTML = media;
+  document.getElementById('modalTag').textContent = j.type.toUpperCase() + (j.condition ? ' · ' + j.condition : '');
+  document.getElementById('modalTeam').textContent = j.team;
+  document.getElementById('modalSeason').textContent = 'Temporada ' + j.season;
+  document.getElementById('modalDesc').textContent = j.desc || 'Sem descrição.';
+
+  const chips = [];
+  if (j.brand) chips.push(`<span class="meta-chip"><strong>${j.brand}</strong></span>`);
+  if (j.size) chips.push(`<span class="meta-chip">Tamanho <strong>${j.size}</strong></span>`);
+  if (j.condition) chips.push(`<span class="meta-chip"><strong>${j.condition}</strong></span>`);
+  document.getElementById('modalMeta').innerHTML = chips.join('');
+
+  const priceWrap = document.getElementById('modalPriceWrap');
+  const btnBuy = document.getElementById('btnBuy');
+  const noPrice = document.getElementById('noPriceNote');
+
+  if (j.price && parseFloat(j.price) > 0) {
+    priceWrap.innerHTML = `<div class="modal-price">R$ ${parseFloat(j.price).toFixed(2).replace('.',',')}</div>`;
+    btnBuy.style.display = 'flex';
+    btnBuy.disabled = false;
+    btnBuy.classList.remove('loading');
+    btnBuy.querySelector('.btn-label').textContent = '⚽ COMPRAR AGORA';
+    noPrice.style.display = 'none';
+  } else {
+    priceWrap.innerHTML = '';
+    btnBuy.style.display = 'none';
+    noPrice.style.display = 'block';
+  }
+
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModalBg(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+  activeJersey = null;
+}
+
+// ── STRIPE CHECKOUT ──
+async function checkout() {
+  if (!activeJersey || !activeJersey.price) return;
+  const btn = document.getElementById('btnBuy');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.querySelector('.btn-label').textContent = 'Aguarde...';
+
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `${activeJersey.team} — ${activeJersey.season} (${activeJersey.type})`,
+        price: activeJersey.price,
+        description: activeJersey.desc || undefined,
+        image: (activeJersey.cover && !activeJersey.cover.startsWith('data:')) ? activeJersey.cover : undefined
+      })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Erro ao iniciar pagamento');
+    }
+  } catch (err) {
+    showToast('Erro: ' + err.message, true);
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-label').textContent = '⚽ COMPRAR AGORA';
+  }
+}
+
+// ── ADMIN ──
+function toggleAdmin() {
+  document.getElementById('adminPanel').classList.toggle('open');
+}
+
+function previewFiles(input) {
+  selectedFiles = Array.from(input.files);
+  const thumbs = document.getElementById('previewThumbs');
+  thumbs.innerHTML = '';
+  selectedFiles.forEach(f => {
+    if (f.type.startsWith('image/')) {
+      const r = new FileReader();
+      r.onload = e => {
+        const img = document.createElement('img');
+        img.className = 'preview-thumb';
+        img.src = e.target.result;
+        thumbs.appendChild(img);
+      };
+      r.readAsDataURL(f);
+    } else if (f.type.startsWith('video/')) {
+      const div = document.createElement('div');
+      div.className = 'preview-vid';
+      div.title = f.name;
+      div.textContent = '▶';
+      thumbs.appendChild(div);
+    }
+  });
+}
+
+function addJersey() {
+  const team = document.getElementById('fTeam').value.trim();
+  const season = document.getElementById('fSeason').value.trim();
+  if (!team || !season) { showToast('Preencha clube e temporada!', true); return; }
+
+  const jersey = {
+    id: Date.now(),
+    team, season,
+    type: document.getElementById('fType').value,
+    brand: document.getElementById('fBrand').value.trim(),
+    size: document.getElementById('fSize').value.trim(),
+    price: document.getElementById('fPrice').value.trim(),
+    condition: document.getElementById('fCondition').value,
+    desc: document.getElementById('fDesc').value.trim(),
+    cover: null,
+    hasVideo: false
+  };
+
+  if (selectedFiles.length) {
+    const firstImg = selectedFiles.find(f => f.type.startsWith('image/'));
+    const firstVid = selectedFiles.find(f => f.type.startsWith('video/'));
+    if (firstImg) {
+      const r = new FileReader();
+      r.onload = e => {
+        jersey.cover = e.target.result;
+        jerseys.unshift(jersey);
+        save(); renderCards();
+        resetForm();
+        showToast('Camisa adicionada!');
+      };
+      r.readAsDataURL(firstImg);
+      if (firstVid) jersey.hasVideo = true;
+      return;
+    } else if (firstVid) {
+      const r = new FileReader();
+      r.onload = e => {
+        jersey.cover = e.target.result;
+        jersey.hasVideo = true;
+        jerseys.unshift(jersey);
+        save(); renderCards();
+        resetForm();
+        showToast('Camisa adicionada!');
+      };
+      r.readAsDataURL(firstVid);
+      return;
+    }
+  }
+
+  jerseys.unshift(jersey);
+  save(); renderCards();
+  resetForm();
+  showToast('Camisa adicionada!');
+}
+
+function resetForm() {
+  ['fTeam','fSeason','fBrand','fSize','fPrice','fDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fType').value = 'titular';
+  document.getElementById('fCondition').value = '';
+  document.getElementById('fMedia').value = '';
+  document.getElementById('previewThumbs').innerHTML = '';
+  selectedFiles = [];
+}
+
+// ── TOAST ──
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── DRAG DROP ──
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('over');
+  const input = document.getElementById('fMedia');
+  const dt = new DataTransfer();
+  Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+  input.files = dt.files;
+  previewFiles(input);
+});
+
+// ── INIT ──
+renderCards();
+</script>
+</body>
+</html>
